@@ -1,0 +1,24 @@
+Output:
+
+Enter your name: Alice
+
+Welcome, Alice! Let's start the quiz.
+
+Level 1 - Question 1:
+What is the capital of France?
+A) Berlin
+B) Madrid
+C) Paris
+D) Rome
+
+Your answer (A/B/C/D): C
+Correct!
+Your current score: 1/12
+
+...
+Quiz Over! Your final score: 6/12
+Good effort! Keep it up!
+
+Leaderboard updated!
+Top Scores:
+Alice: 6 points
