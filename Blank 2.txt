@@ -1,0 +1,193 @@
+                   Quiz Game Project
+
+
+import time
+import random
+import sys
+
+# List of questions and answers
+questions = [
+    {
+        "question": "What is the capital of France?",
+        "options": ["A) Berlin", "B) Madrid", "C) Paris", "D) Rome"],
+        "answer": "C",
+        "difficulty": 1
+    },
+    {
+        "question": "Which planet is known as the Red Planet?",
+        "options": ["A) Earth", "B) Mars", "C) Venus", "D) Jupiter"],
+        "answer": "B",
+        "difficulty": 1
+    },
+    {
+        "question": "Who wrote 'Romeo and Juliet'?",
+        "options": ["A) William Shakespeare", "B) Charles Dickens", "C) Jane Austen", "D) Mark Twain"],
+        "answer": "A",
+        "difficulty": 1
+    },
+    {
+        "question": "What is the largest mammal?",
+        "options": ["A) Elephant", "B) Blue Whale", "C) Giraffe", "D) Hippo"],
+        "answer": "B",
+        "difficulty": 1
+    },
+    {
+        "question": "Which is the longest river in the world?",
+        "options": ["A) Amazon", "B) Nile", "C) Yangtze", "D) Mississippi"],
+        "answer": "B",
+        "difficulty": 1
+    },
+    {
+        "question": "What is the square root of 144?",
+        "options": ["A) 10", "B) 11", "C) 12", "D) 14"],
+        "answer": "C",
+        "difficulty": 2
+    },
+    {
+        "question": "What is the speed of light in meters per second?",
+        "options": ["A) 3 x 10^8", "B) 2.5 x 10^8", "C) 1.5 x 10^8", "D) 3 x 10^7"],
+        "answer": "A",
+        "difficulty": 2
+    },
+    {
+        "question": "Who developed the theory of general relativity?",
+        "options": ["A) Isaac Newton", "B) Albert Einstein", "C) Nikola Tesla", "D) Galileo Galilei"],
+        "answer": "B",
+        "difficulty": 2
+    },
+    {
+        "question": "Which element has the atomic number 1?",
+        "options": ["A) Hydrogen", "B) Helium", "C) Oxygen", "D) Carbon"],
+        "answer": "A",
+        "difficulty": 2
+    },
+    {
+        "question": "Which country won the FIFA World Cup in 2018?",
+        "options": ["A) Brazil", "B) France", "C) Germany", "D) Argentina"],
+        "answer": "B",
+        "difficulty": 3
+    },
+    {
+        "question": "What is the derivative of x^2?",
+        "options": ["A) 2x", "B) x", "C) 2", "D) x^3"],
+        "answer": "A",
+        "difficulty": 3
+    },
+    {
+        "question": "Who is known as the father of modern physics?",
+        "options": ["A) Albert Einstein", "B) Isaac Newton", "C) Galileo Galilei", "D) Nikola Tesla"],
+        "answer": "A",
+        "difficulty": 3
+    },
+    {
+        "question": "What is the capital of Canada?",
+        "options": ["A) Vancouver", "B) Ottawa", "C) Toronto", "D) Montreal"],
+        "answer": "B",
+        "difficulty": 3
+    }
+]
+
+# Function to display the question
+def display_question(question_data):
+    """Display the question and its options"""
+    print(question_data["question"])
+    for option in question_data["options"]:
+        print(option)
+
+# Function to check the user's answer
+def check_answer(user_answer, correct_answer):
+    """Check if the user's answer is correct"""
+    return user_answer.upper() == correct_answer.upper()
+
+# Timer function for each question
+def start_timer():
+    """Start a timer and return whether the time ran out"""
+    start_time = time.time()
+    timeout = 15  # 15 seconds for each question
+    return time.time() - start_time > timeout
+
+# Function to display the current score
+def display_score(score, total_questions):
+    """Display the score"""
+    print(f"\nYour current score: {score}/{total_questions}")
+
+# Function to shuffle and randomize questions
+def shuffle_questions():
+    """Shuffle the questions randomly for each new game"""
+    random.shuffle(questions)
+
+# Leaderboard functionality
+leaderboard = {}
+
+def update_leaderboard(player_name, score):
+    """Update the leaderboard with the player's score"""
+    leaderboard[player_name] = score
+    print("\nLeaderboard updated!")
+    print("Top Scores:")
+    for player, score in sorted(leaderboard.items(), key=lambda x: x[1], reverse=True):
+        print(f"{player}: {score} points")
+
+# Main function to run the quiz
+def run_quiz(player_name):
+    """Function to run the quiz game"""
+    score = 0
+    total_questions = len(questions)
+    level = 1  # Start at level 1
+
+    print(f"\nWelcome, {player_name}! Let's start the quiz.\n")
+    time.sleep(1)
+
+    shuffle_questions()  # Shuffle questions for every game
+
+    for idx, question_data in enumerate(questions):
+        if question_data["difficulty"] > level:
+            continue  # Skip questions that are above the current level
+        
+        print(f"\nLevel {level} - Question {idx + 1}:")
+        display_question(question_data)
+        
+        start_time = time.time()
+        user_answer = input("\nYour answer (A/B/C/D): ").strip()
+
+        # Check if the user ran out of time
+        if time.time() - start_time > 15:
+            print("Time's up!")
+            user_answer = ""
+        
+        if check_answer(user_answer, question_data["answer"]):
+            score += level  # Points increase with difficulty level
+            print("Correct!")
+        else:
+            print(f"Wrong! The correct answer was {question_data['answer']}.")
+
+        level = min(level + 1, 3)  # Increase the level as the quiz progresses
+        display_score(score, total_questions)
+        time.sleep(1)
+
+    # Final score display
+    print(f"\nQuiz Over! Your final score: {score}/{total_questions}")
+    
+    if score >= 50:
+        print("Great job! You're a quiz master!")
+    elif score >= 30:
+        print("Good effort! Keep it up!")
+    else:
+        print("Better luck next time!")
+    
+    update_leaderboard(player_name, score)
+
+# Function to ask the player if they want to play again
+def play_again():
+    """Ask the player if they want to play again"""
+    response = input("\nDo you want to play again? (yes/no): ").lower()
+    if response == "yes":
+        player_name = input("Enter your name: ")
+        run_quiz(player_name)
+    else:
+        print("Thanks for playing! Goodbye!")
+        sys.exit()
+
+if __name__ == "__main__":
+    player_name = input("Enter your name: ")
+    run_quiz(player_name)
+    play_again()
